@@ -8,6 +8,25 @@
     Tier 2 - Application Tier
     Tier 3 - Data Tier
 
+graph TD
+    A[Start] --> B[Create VPC]
+    B --> C[Create Subnets]
+    C --> D[Create Internet Gateway]
+    D --> E[Create NAT Gateway]
+    E --> F[Configure Route Tables]
+    F --> G[Configure Security Groups]
+    G --> H[Review and Test]
+    H --> I[End]
+
+    B -.- B1[1 VPC]
+    C -.- C1[1 Public, 3 Private]
+    D -.- D1[Attach to VPC]
+    E -.- E1[In Public Subnet]
+    F -.- F1[Public and Private]
+    G -.- G1[Set Rules]
+    H -.- H1[Verify Connectivity]
+
+
 ## Step by Step
 1. Make VPC
    - 4 subnets (1 public, 3 private)
