@@ -1,10 +1,10 @@
 # AWS 3-Tier Architecture Setup Guide
 
 ## 📋 Overview
+
 This guide provides step-by-step instructions for setting up a secure and scalable 3-tier architecture in AWS (Amazon Web Services). The architecture implements best practices for cloud infrastructure deployment with distinct presentation, application, and data tiers.
 
 ## 🏗️ Architecture Components
-![Tier3Topology](https://github.com/user-attachments/assets/8bbbd5ba-3a64-4a61-9435-5ee27b9849d9)
 
 ### Network Layout
 - **Region:** US West (Oregon) / us-west-2
@@ -12,6 +12,7 @@ This guide provides step-by-step instructions for setting up a secure and scalab
 - **Availability Zones:** us-west-2a, us-west-2b
 
 ### Subnet Structure
+
 | Subnet Name | CIDR Block | Availability Zone | Type |
 |-------------|------------|-------------------|------|
 | Public Subnet 1 | 10.0.0.0/24 | us-west-2a | Public |
@@ -22,6 +23,7 @@ This guide provides step-by-step instructions for setting up a secure and scalab
 ## 🚀 Setup Instructions
 
 ### 1. VPC Setup
+
 1. Create VPC (3-tier-VPC)
 2. Add Subnets according to the structure above
 3. Create and attach Internet Gateway (3-tier-IGW)
@@ -36,13 +38,6 @@ This guide provides step-by-step instructions for setting up a secure and scalab
    - Route to NAT Gateway (0.0.0.0/0)
    - Associate with all Private Subnets
    ```
-
-![Subnet](https://github.com/user-attachments/assets/0970b52b-eecf-48d1-a073-0a5e9d1585ff)
-![Internet Gateway](https://github.com/user-attachments/assets/d49f541e-7c7b-4ea0-9002-a97a8ff7dd02)
-![NAT Gateway](https://github.com/user-attachments/assets/021ff2d1-4fdc-432c-a34f-a8a1efc525e0)
-![Route Table](https://github.com/user-attachments/assets/d1ce8aa9-5508-4462-ba1e-a3c7f43e7fa6)
-![VPC](https://github.com/user-attachments/assets/ab273dbb-ab04-486f-86fc-9bfd05ea11a8)
-
 
 ### 2. Security Groups Configuration
 
@@ -80,8 +75,6 @@ Inbound Rules:
 - MYSQL/Aurora (app-server-SG)
 - MYSQL/Aurora (bastion-host-SG)
 ```
-![Security Group](https://github.com/user-attachments/assets/b0a4e637-dde2-46cc-b17d-bc86f3cf47f6)
-
 
 ### 3. EC2 Instance Setup
 
@@ -130,7 +123,6 @@ User Data:
 sudo yum install -y mariadb-server
 sudo service mariadb start
 ```
-![EC2 Instances](https://github.com/user-attachments/assets/19fb37dd-ef51-49de-b799-2ff065e68d6e)
 
 ### 4. Database Setup (Amazon RDS)
 
@@ -140,7 +132,6 @@ sudo service mariadb start
    VPC: 3-tier-VPC
    Subnets: Private Subnet 2, Private Subnet 3
    ```
-   ![DB Subnet Groups](https://github.com/user-attachments/assets/c07b8230-0043-47c2-8ea8-af25a2c132e4)
 
 2. Create MariaDB Instance:
    ```
@@ -153,8 +144,6 @@ sudo service mariadb start
    Subnet Group: DBSubnetGroup
    Public Access: No
    ```
-![Database](https://github.com/user-attachments/assets/fd3309d0-066c-4ec7-91e5-c54c740cfbd9)
-
 
 ## 🔍 Testing Connectivity
 
@@ -164,8 +153,6 @@ sudo service mariadb start
    chmod 400 your-key-pair.pem
    ssh -i "your-key-pair.pem" ec2-user@bastion-host-public-ip
    ```
-![Screenshot 2024-10-16 162733](https://github.com/user-attachments/assets/1edeaa55-58e3-4072-827e-2b0d752afa85)
-![SSH to Bastion Host](https://github.com/user-attachments/assets/88dc06e3-338e-4c98-a546-c3767dd65510)
 
 2. From Bastion Host to App Server:
    ```bash
@@ -173,7 +160,6 @@ sudo service mariadb start
    chmod 400 your-key-pair.pem
    ssh -i "your-key-pair.pem" ec2-user@app-server-private-ip
    ```
-![SSH to App Server](https://github.com/user-attachments/assets/296b07a2-550c-4077-a124-c26e20873a9d)
 
 3. Test Network Connectivity:
    ```bash
@@ -181,13 +167,13 @@ sudo service mariadb start
    ping web-server-private-ip
    mysql -h db-3-tier-endpoint -u admin -p
    ```
-![Ping to Web Server](https://github.com/user-attachments/assets/7cad52a7-3f04-420d-be1c-939ba3e35eee)
 
-4. Test Connectivity from App Server to the database Server:
+4. Test Database Connectivity:
    ```bash
    # From App Server
-   mysql --user="your user name" --password='your database password' --host="your database server endpoint"
+   mysql --user="your_username" --password='your_database_password' --host="your_database_endpoint"
    SHOW DATABASES;
+   ```
 
 ## ⚠️ Security Best Practices
 
@@ -198,10 +184,13 @@ sudo service mariadb start
 5. Use AWS CloudTrail for API auditing
 
 ## 🤝 Contributing
+
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
 ## 📝 License
+
 [MIT](https://choosealicense.com/licenses/mit/)
 
 ---
+
 **Note:** Replace placeholder values (IPs, endpoints, etc.) with your actual infrastructure values.
